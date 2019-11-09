@@ -39,12 +39,18 @@ class EnrollmentController {
     if (isBefore(startDate, new Date())) {
       return res.status(400).json({ error: 'Past dates are not permitted.' });
     }
+    // verifica se estudante ja possui matricula
+    const existStudentEnrolled = await Enrollment.findOne({
+      where: { student_id },
+    });
+    if (existStudentEnrolled) {
+      return res.status(400).json({ error: 'Student already has enrollment.' });
+    }
     // calcula enrollment price
     const { duration, price } = plan;
     const totalPrice = duration * price;
     // calcula end date
     const endDate = addMonths(startDate, duration);
-    console.log(plan_id);
 
     const newEnrollment = {
       student_id,
