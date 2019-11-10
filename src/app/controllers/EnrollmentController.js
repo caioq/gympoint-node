@@ -1,11 +1,31 @@
 import * as Yup from 'yup';
-import { startOfHour, parseISO, isBefore, addMonths } from 'date-fns';
+import { parseISO, isBefore, addMonths } from 'date-fns';
 
 import Enrollment from '../models/Enrollment';
 import Student from '../models/Student';
 import Plan from '../models/Plan';
 
 class EnrollmentController {
+  async index(req, res) {
+    const enrollments = await Enrollment.findAll({
+      attributes: ['id', 'start_date', 'end_date', 'price'],
+      include: [
+        {
+          model: Student,
+          as: 'student',
+          attributes: ['name', 'email'],
+        },
+        {
+          model: Plan,
+          as: 'plan',
+          attributes: ['title'],
+        },
+      ],
+    });
+
+    return res.status(200).json(enrollments);
+  }
+
   async store(req, res) {
     const schema = Yup.object().shape({
       student_id: Yup.number().required(),
