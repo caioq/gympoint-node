@@ -140,6 +140,14 @@ class EnrollmentController {
 
     return res.status(200).json(enrollmentUpdated);
   }
+
+  async delete(req, res) {
+    const enrollment = await Enrollment.destroy({
+      where: { id: req.params.id },
+    });
+
+    return res.json(enrollment);
+  }
 }
 
 export default new EnrollmentController();
