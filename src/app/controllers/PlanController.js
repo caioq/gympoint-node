@@ -20,9 +20,8 @@ class PlanController {
       return res.status(400).json({ error: 'Validation fails' });
     }
 
-    console.log(req.body);
-
     const plan = await Plan.create(req.body);
+
     return res.status(201).json(plan);
   }
 
@@ -38,7 +37,6 @@ class PlanController {
     }
 
     let plan = await Plan.findByPk(req.params.id);
-    console.log(plan);
 
     plan = await plan.update(req.body);
 
