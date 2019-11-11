@@ -4,7 +4,22 @@ import HelpOrder from '../models/HelpOrder';
 import Student from '../models/Student';
 
 class HelpOrderController {
-  async index(req, res) {}
+  async index(req, res) {
+    const helpOrdersNoAnswer = await HelpOrder.findAll({
+      where: {
+        answer: null,
+      },
+      include: [
+        {
+          model: Student,
+          as: 'student',
+          attributes: ['name', 'email'],
+        },
+      ],
+    });
+
+    return res.status(200).json(helpOrdersNoAnswer);
+  }
 
   async store(req, res) {
     const schema = Yup.object().shape({
@@ -26,6 +41,8 @@ class HelpOrderController {
       answer,
       answer_at: new Date(),
     });
+
+    // TODO: enviar email para o aluno quando pedido for respondido
 
     return res.status(201).json(newHelpOrder);
   }
