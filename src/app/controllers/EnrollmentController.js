@@ -1,5 +1,8 @@
 import * as Yup from 'yup';
-import { parseISO, isBefore, addMonths } from 'date-fns';
+import { parseISO, isBefore, addMonths, format } from 'date-fns';
+
+import pt from 'date-fns/locale/pt';
+import Mail from '../../lib/Mail';
 
 import Enrollment from '../models/Enrollment';
 import Student from '../models/Student';
@@ -78,6 +81,19 @@ class EnrollmentController {
     const endDate = addMonths(startDate, duration);
 
     // TODO: enviar email de boas vindas
+    await Mail.sendMail({
+      to: `${student.name} <${student.email}>`,
+      subject: 'Boas vindas da equipe GymPoint',
+      template: 'enrollment',
+      context: {
+        student: student.name,
+        plan: plan.title,
+        price: totalPrice,
+        date: format(endDate, "dd 'de' MMMM 'de' yyyy", {
+          locale: pt,
+        }),
+      },
+    });
 
     const newEnrollment = {
       student_id,
