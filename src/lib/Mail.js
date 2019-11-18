@@ -5,7 +5,7 @@ import nodemailerhbs from 'nodemailer-express-handlebars';
 import mailConfig from '../config/mail';
 
 class Mail {
-  contructor() {
+  constructor() {
     const { host, port, secure, auth } = mailConfig;
 
     this.transporter = nodemailer.createTransport({
